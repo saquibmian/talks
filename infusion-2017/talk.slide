@@ -1,0 +1,261 @@
+A trip down memory lane
+A review of 10 influential academic computer science papers
+7 Nov 2017
+
+Saquib Mian
+
+* Learning objectives
+
+1. Understand that academic papers are applicable to practitioners, beyond just a theoretical framework.
+
+2. Understand what complex problems have been solved, and what is actively being solved.
+
+3. Gain a vocabulary to discuss and research common CS principles and scenarios.
+
+* Experimental Time-Sharing System (1962)
+
+.link http://larch-www.lcs.mit.edu:8001/~corbato/sjcc62 Fernando J. Corbató, Marjorie Merwin-Daggett, and Robert C. Daley. 1962. An experimental time-sharing system. In Proceedings of the May 1-3, 1962, spring joint computer conference (AIEE-IRE '62 (Spring)). ACM, New York, NY, USA, 335-344.
+
+Traditionally, programs ran to completion, returned, and then another program could be started.
+
+The Compatible Time-Sharing System used a multi-level scheduling algorithm, where each program had a time slice to run in; if the program didn't complete in that time slice, it was promoted to a higher level. Lower-level programs were given priority over higher-level ones.
+
+Led to the development of one the first messaging tools, and possibly email.
+
+Kick-started the research in scheduling algorithms, which become central in async programming.
+
+* A relational model for large shared data banks (1970)
+
+.link https://cs.uwaterloo.ca/~david/cs848s14/codd-relational.pdf E. F. Codd. 1970. A relational model of data for large shared data banks. Commun. ACM 13, 6 (June 1970), 377-387.
+
+Most data at this time was modeled in a tree-like hierarchical structure. Applications were strongly coupled to the internal representation of their data. 
+
+Codd proposed a row-based tuple structure with ordered columns and introduced primary keys for cross-referencing of tuples, which allowed data to be be "normalized".
+
+: Let the computer figure out where and how the information is stored and how to retrieve it
+
+Initially, people thought that the model was too simplistic and that it could never give good performance. A few years later, a cost-based optimizer was developed to make relational databases much more efficient.
+
+* On the Criteria To Be Used in Decomposing Systems into Modules (1972)
+
+.link https://www.cs.umd.edu/class/spring2003/cmsc838p/Design/criteria.pdf D. L. Parnas. 1972. On the criteria to be used in decomposing systems into modules. Commun. ACM 15, 12 (December 1972), 1053-1058.
+
+A module is responsibility. Nowadays we might think of a _service_.
+
+Therefore: a modularization strategy requires an overall system design.
+
+Why modularize? Shortens development time, makes development more flexible, and makes the system comprehensible.
+    
+The paper compared the typical _flowchart-y_ approach with an unconventional approach based on _information_hiding_.
+
+_"The_effectiveness_of_a_“modularization”_is_dependent_upon_the_criteria_used_in_dividing_the_system_into_modules._..._It_is_almost_always_incorrect_to_begin_the_decomposition_of_a_system_into_modules_on_the_basis_of_a_flowchart”_
+
+* Designing Software for Ease of Extension and Contraction (1978)
+
+.link http://www.cs.umd.edu/class/spring2003/cmsc838p/Design/family.pdf David L. Parnas. 1978. Designing software for ease of extension and contraction. In Proceedings of the 3rd international conference on Software engineering (ICSE '78). IEEE Press, Piscataway, NJ, USA, 264-277.
+
+.image dseec-1.png
+
+* Why can't we subset our programs?
+
+Excessive information distribution.
+
+- Either by explicit dependencies or implicit assumptions.
+
+The system is a chain of data transforming components.
+
+- Later components rely explicitly on output of the previous component, and implicitly on output of all previous components. If one component in this chain is not needed, that code is often hard to remove because the output of its predecessor is not compatible with the input requirements of its successor.
+
+Some components perform more than one function.
+
+- When you want one function, the others come along for the ride.
+
+Cycles in your dependency graph.
+
+- "... one may end up with a system in which nothing works until everything works."
+
+* How to make it easier to subset our programs
+
+1. Identify the subsets first -- a "demanding intellectual exercise".
+
+- Find the _minimal_ _subset_, and then the _minimal_ _increments_ required to get to the full program.
+
+2. Use good criteria when modularizing (information hiding).
+
+- Everything that is likely to change should be a _secret_.
+
+3. Restrained _usage_ of other modules.
+
+- "The disadvantage of unrestrained usage of each others facilities is that the system parts become highly interdependent. Often there are no subsets of the system that can be used before the whole system is complete."
+
+* The uses relationship
+
+"A uses B if there exist situations in which the correct functioning of A depends upon the availability of a correct implementation of B"
+
+This is not _invocation_. If A is only required to _invoke_ B in a certain condition, then A is correct even if B is incorrect. 
+
+A may use B without ever invoking it. 
+
+- Example: throwing an error in a web request unwinds the stack and error handling captures it, returning a valid response to the client.
+
+You can build a usage hierarchy, and each level is by definition a usable and testable subset.
+
+Lots of applications in monitoring and tracing.
+
+* Go To Statement Considered Harmful (1979)
+
+.link https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf E. Dijkstra. 1979. Go to statement considered harmful. In Classics in software engineering, Edward Nash Yourdon (Ed.). Yourdon Press, Upper Saddle River, NJ, USA 27-33.
+
+Dijkstra argued for structured programming, using constructs like conditionals and loops to control program flow instead of `goto`, to try and "shorten the conceptual gap between the static program and the dynamic process."
+
+There was great debate (resistance) to this, with many practitioners complaining that structured programming couldn't represent many complex program flows. 
+
+But by the end of the 20th century, everyone was convinced that it was useful, because structured programs were easily provable.
+
+* A Description of the Model-View-Controller User Interface Paradigm in the Smalltalk-80 System (1988)
+
+.link http://www.math.rsu.ru/smalltalk/gui/mvc_krasner_and_pope.pdf E. Krasner, Glenn & Pope, Stephen. (1988). A Description of the Model-View-Controller User Interface Paradigm in the Smalltalk80 System. Journal of Object-oriented Programming - JOOP. 1.
+
+Described the Model-View-Controller (MVC) programming paradigm, which dominates all major graphical user interfaces today, including web frameworks.
+
+"objects of different classes take over the operations related to the application domain, the display of the application's state, and the user interaction with the model and the view"
+
+* MVC
+
+.image mvc.png
+
+* Harvest, Yield, and Scalable Tolerant Systems (1999)
+
+.link https://pdfs.semanticscholar.org/5015/8bc1a8a67295ab7bce0550886a9859000dc2.pdf Armando Fox and Eric A. Brewer. 1999. Harvest, Yield, and Scalable Tolerant Systems. In Proceedings of the The Seventh Workshop on Hot Topics in Operating Systems (HOTOS '99). IEEE Computer Society, Washington, DC, USA, 174-.
+
+Brewer's conjecture: it is impossible for your web service to provide Consistency, Availability, and Partition-tolerance (CAP principle). This was then proven (for asynchronous systems) in [[https://users.ece.cmu.edu/~adrian/731-sp04/readings/GL-cap.pdf][this]] paper.
+
+Most systems sacrifice consistency to stay up (AP), usually by caching their data. Some systems emphasize consistency and sacrifice availability (CP), usually by going into a read-only mode. 
+
+Consistency is the most common victim.
+
+How do we get around this tradeoff?
+
+* Solution 1: Harvest vs. Yield
+
+Yield: the probability of completing a request
+
+Harvest: the fraction of the data reflected in the response
+
+"In the presence of faults there is typically a tradeoff between providing no answer (reducing yield) and providing an imperfect answer (maintaining yield, but reducing harvest)."
+
+Choose what you sacrifice intentionally.
+
+Example: A class list should be complete. But I don't have to know everything about each student in the class.
+
+* Solution 2: Application Decomposition and Orthogonal Mechanisms
+
+I.e., a microservices architecture (in a paper published in 1999!).
+
+Large applications can be broken into CP or AP components. When a component goes down, the overall application continues functioning with reduced functionality.
+
+This way, consistency is not sacrificed where it matters, although the overall application gives weaker availability guarantees for the areas where consistency matters (and strong availability guarantees otherwise).
+
+Push other concerns to orthogonal services. For example, retries and timeouts can be delegated to a service fabric; load balancing be done at the network level.
+
+* On Designing and Deploying Internet-Scale Services (2007)
+
+.link http://mvdirona.com/jrh/talksAndPapers/JamesRH_Lisa.pdf James Hamilton. 2007. On designing and deploying internet-scale services. In Proceedings of the 21st conference on Large Installation System Administration Conference (LISA'07), Paul Anderson (Ed.). USENIX Association, Berkeley, CA, USA, , Article 18 , 12 pages.
+
+Read this paper. 
+
+“We have long believed that 80% of operations issues originate in design and development… When systems fail, there is a natural tendency to look first to operations since that is where the problem actually took place. Most operations issues, however, either have their genesis in design and development or are best solved there.”
+
+“Reducing operations costs and improving service reliability for a high scale internet service starts with writing the service to be operations-friendly.”
+
+* Three tenets:
+1. Expect failures.
+2. Keep things simple.
+3. Automate everything; no people!
+
+* Ten subsections
+- Overall application design
+- Automatic management and provisioning
+- Dependency management
+- Release cycle and testing
+- Hardware selection and standardization
+- Operations and capacity planning
+- Auditing, monitoring and alerting
+- Graceful degradation and admission control
+- Customer and press communication plan
+- Customer self-provisioning and self-help
+
+* Chaos Monkey
+“...is the operations team willing and able to bring down any server in the service at any time without draining the workload first?”
+
+* Make the development team responsible
+“If the development team is frequently called in the middle of the night, automation is the likely outcome. If operations is frequently called, the usual reaction is to grow the operations team.”
+
+* Partitions should not be bounded by any real world entity
+“Partitions should be infinitely-adjustable and fine-grained, and not be bounded by any real world entity. If the partition is by company, then a big company will exceed the size of a single partition. If the partition is by name prefix, then eventually all the P’s, for example, won’t fit on a single server.“
+
+* Prevent cascading failures
+“When dependent services fail, mark them as down and stop using them to prevent threads from being tied up waiting on failed components. … If the service is overloading a dependent service, the depending service needs to know and, if it can’t back-off automatically, alerts need to be sent."
+
+"All teams with dependencies should have engineering contacts on the dependent teams.”
+
+* Effective QA 
+“Quality assurance in a large-scale system is a data mining and visualization problem, not a testing problem. Everyone needs to focus on getting the most out of the volumes of data in a production environment.”
+
+: the authors point out this approach is a little controversial
+
+* Scalability! But at what COST? (2015)
+
+.link https://www.usenix.org/system/files/conference/hotos15/hotos15-paper-mcsherry.pdf Frank McSherry, Michael Isard, and Derek G. Murray. 2015. Scalability! but at what cost?. In Proceedings of the 15th USENIX conference on Hot Topics in Operating Systems (HOTOS'15), George Candea (Ed.). USENIX Association, Berkeley, CA, USA, 14-14.
+
+Configuration that Outperforms a Single Thread - The COST of a system is the hardware platform (number of cores) required before the platform outperforms a competent _single_threaded_ implementation
+
+The researchers took graph-processing systems widely in use and compared their measurements to single-threaded implementations of the PageRank and graph connectivity running on their own laptops. 
+
+“No scalable system … consistently outperforms a single thread, even when the single thread repeatedly re-reads the data from external storage.”
+
+* Which is the better system?
+.image cost-scalability.png
+
+* Which is the better system?
+.image cost-perf.png
+
+: There are lots of good reasons for why a system might have a high COST (high availability, fault tolerance, integration with a platform, etc.) but it’s important to evaluate the COST to determine if that COST is intrinsic to the design or if algorithm is being inefficient.
+
+* Hotspot Patterns - The Formal Definition and Automatic Detection of Architecture Smells (2015)
+
+.link http://www.dtic.mil/get-tr-doc/pdf?AD=ADA621415 Ran Mo, Yuanfang Cai, Rick Kazman, and Lu Xiao. 2015. Hotspot Patterns: The Formal Definition and Automatic Detection of Architecture Smells. In Proceedings of the 2015 12th Working IEEE/IFIP Conference on Software Architecture (WICSA '15). IEEE Computer Society, Washington, DC, USA, 51-60.
+
+HotSpot patterns are "recurring architecture problems that occur in most complex systems and incur high maintenance costs."
+
+"... we have observed that there are just a few distinct types of architecture issues, and these occur over and over again."
+
+* Patterns which contribute to maintenance costs
+
+1. Unstable Interface
+
+- interfaces that are changed frequently with other files
+
+2. Implicit Cross-module Dependency
+
+- structurally independent modules that tend to change together frequently.
+
+3. Unhealthy Inheritance Hierarchy
+
+- base class depends on derived classes, or a client depends on the base class and all of its derivations.
+
+4. Cross-Module or Cross-Package Cycle
+
+In this study, _module_ referred to "independent file groups."
+
+* Summary
+
+Academics give us tools to discuss and solve complex problems.
+
+Most solutions build on prior solutions.
+
+You can often predict where the industry is going by keeping up with the research.
+
+Don't settle for tradeoff, there's someone smart out there who's working on a solution (or already has).
+
+Everything leads to microservices.
