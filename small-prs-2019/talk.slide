@@ -1,0 +1,137 @@
+Small Pull Requests
+Advantages and techniques for small pull requests
+1 Oct 2019
+
+Saquib Mian
+
+* Learning objectives
+
+1. Understand the purpose of a pull request.
+
+2. Understand what a large pull request is and why they slow us down.
+
+3. Gain a couple techniques to breakdown large pull requests into smaller ones.
+
+Disclaimer: I don't have data to back up my claims, but I could probably get it.
+
+* A pull request is...
+
+A request to add some functionality to the codebase.
+
+- A feature?
+- A bug fix?
+- A refactoring?
+- Anything that adds value
+
+* A pull request is not...
+
+A place to have architecture discussions.
+
+A place to discuss requirements.
+
+A place to correct someone.
+
+* We want to deliver value
+
+- As fast as possible
+- Mean-Time-Between-Failures (MTBF) vs. Mean-Time-To-Recovery (MTTR)
+- Failure (a bug) is inevitable
+
+We need a safe way to deliver value as fast as possible.
+
+* What is a large pull request?
+
+Example 1:
+
+- a major-version Angular upgrade (6 -> 7)
+- whitespace changes (both additions and removals)
+- a new feature that _replaces_ an existing feature
+- cleanup of some surrounding components
+
+Example 2:
+
+- renames `Project.projectName` to `Project.name` (many many references in codebase)
+- adds a new field to model
+
+Basically any PR that _does_more_than_one_thing_ or is _noisy_!
+
+* Large pull requests slow us down
+
+They are...
+
+- Longer to review
+- Harder to review
+- More likely to block someone
+- More likely to require changes after merging (i.e., not iterative)
+- More likely to let bugs through
+
+* Breaking down a pull request: adding life-cycle hooks to operation plans
+
+A refactoring-based technique
+
+1. Add new lifecycle hooks (`OperationPlanApprovedEvent.java`, ...)
+
+2. Raise events at the appropriate places
+
+3. Add listener for existing logic and delete old logic (`EmailSendingOperationPlanApprovedEventListener.java`)
+
+4. Add listeners for new logic (`ArchivingOperationPlanSubmittedEventListener.java`)
+
+Resource
+
+.link https://www.amazon.ca/Working-Effectively-Legacy-Michael-Feathers/dp/0131177052 Working Effectively with Legacy Code by Michael C. Feathers
+
+* Breaking down a pull request: adding attachments to an event
+
+A mix of horizontal- and vertical-slicing
+
+1. Data layer (`Attachment.java`, `S3URI.java`, `Add_attachments.sql`)
+1. S3/Minio integration (`S3Client.java`, `AwsProperties.java`)
+1. DTOs (`AttachmentDto.java`, `CreateAttachmentRequest.java`, `CreateAttachmentResponse.java`)
+
+2. Domain layer (`AttachmentFactory.java`, `AttachmentPathGenerator.java`)
+
+3. Service (`AttachmentService.java`)
+
+4. Controller (`AttachmentsController.java`)
+
+Latent code vs. dead code
+Don't forget to describe intent!
+
+* Breaking down a pull request: enforcing events as aggregrate roots for operation plans
+
+A mix of horizontal- and vertical-slicing
+
+1. Data layer (`Attachment.java`, `S3URI.java`, `Add_attachments.sql`)
+1. S3/Minio integration (`S3Client.java`, `AwsProperties.java`)
+1. DTOs (`AttachmentDto.java`, `CreateAttachmentRequest.java`, `CreateAttachmentResponse.java`)
+
+2. Domain layer (`AttachmentFactory.java`, `AttachmentPathGenerator.java`)
+
+3. Service (`AttachmentService.java`)
+
+4. Controller (`AttachmentsController.java`)
+
+Latent code vs. dead code
+Don't forget to describe intent!
+
+* Small PRs can be deceptively simple!
+
+Case in point: the `trim()` PR.
+
+Small pull requests are not a substitute for being a good reviewer!
+
+* Do's and Don't's
+
+- DO make separate PRs for whitespace changes, renames, etc.
+- DO add latent code
+- DO use WIP limits
+- DO write good descriptions
+- DO annotate your PRs (e.g., "this is copied verbatim from `X`, will remove it from `X` in a follow up PR")
+- DO send your PRs to the same reviewer(s)
+- DO delegate cleanup to follow-up PRs
+- DO be a good reviewer: use tasks and `nit`s
+
+- DON'T do more than one thing at a time
+- DON'T sneak in bug fixes
+- DON'T spam your team with PRs
